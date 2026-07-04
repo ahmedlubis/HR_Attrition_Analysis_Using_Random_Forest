@@ -1,0 +1,106 @@
+---
+title: "HR Attrition Analysis Using Random Forest"
+author: "AhmedLubis"
+date: "2026-07-04"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# ==============================================================================
+# HUMAN RESOURCES ATTRITION ANALYSIS USING RANDOM FOREST
+# ==============================================================================
+
+# Step 1: Load Required Libraries
+```{r}
+library(tidyverse)
+library(randomForest)
+library(caret)
+```
+
+# ------------------------------------------------------------------------------
+# Step 2: Load and Clean the Dataset
+# ------------------------------------------------------------------------------
+
+```{r}
+# Read the file with proper delimiter (;) and handle empty text inputs as NA
+hr_raw <- read_delim("hr_data.csv", delim = ";", na = c("", "NA"))
+
+# Clean columns and handle categorical data types
+hr_cleaned <- hr_raw %>% 
+  rename(department = sales) %>% 
+  drop_na() %>% # Drop rows with missing values to ensure model stability
+  mutate(
+    # Target variable 'left' must be a factor for classification
+    left = factor(left, levels = c(0, 1), labels = c("Stayed", "Left")),
+    
+    # Format all categorical variables as factors
+    salary = factor(salary, levels = c("low", "medium", "high")),
+    department = as.factor(department),
+    Work_accident = as.factor(Work_accident),
+    promotion_last_5years = as.factor(promotion_last_5years)
+  )
+
+# Verify structural transformations
+glimpse(hr_cleaned)
+```
+
+# ------------------------------------------------------------------------------
+# Step 3: Split Data into Training and Testing Sets
+# ------------------------------------------------------------------------------
+
+```{r}
+set.seed(123)
+
+# Stratified split: 70% for training, 30% for testing
+train_index <- createDataPartition(hr_cleaned$left, p = 0.70, list = FALSE)
+train_set   <- hr_cleaned[train_index, ]
+test_set    <- hr_cleaned[-train_index, ]
+
+# Print sizes to confirm the split balance
+cat("Training Set size:", nrow(train_set), "\n")
+cat("Testing Set size:", nrow(test_set), "\n")
+```
+
+# ------------------------------------------------------------------------------
+# Step 4: Train the Random Forest Classifier
+# ------------------------------------------------------------------------------
+
+```{r}
+# Train an ensemble of 500 decision trees
+rf_model <- randomForest(
+  left ~ ., 
+  data = train_set, 
+  ntree = 500, 
+  importance = TRUE
+)
+
+# Print overall model summary and Out-Of-Bag (OOB) error rate
+print(rf_model)
+```
+
+# ------------------------------------------------------------------------------
+# Step 5: Evaluate Model Performance (Confusion Matrix)
+# ------------------------------------------------------------------------------
+
+```{r}
+# Predict the status of employees in the unseen test set
+test_predictions <- predict(rf_model, newdata = test_set)
+
+# Generate a comprehensive confusion matrix report
+conf_matrix <- confusionMatrix(test_predictions, test_set$left)
+print(conf_matrix)
+```
+
+# ------------------------------------------------------------------------------
+# Step 6: Extract and Plot Feature Importance
+# ------------------------------------------------------------------------------
+
+```{r}
+# Display the numerical importance scores for each variable
+print(importance(rf_model))
+
+# Generate visual charts for Mean Decrease Accuracy and Mean Decrease Gini
+varImpPlot(rf_model, main = "Feature Importance for Employee Attrition")
+```
+
