@@ -16,7 +16,7 @@ To ensure data quality and model stability, all rows containing missing values w
 | **number_project** | Total number of projects handled by the employee |
 | **average_montly_hours** | Average monthly working hours |
 | **time_spend_company** | Number of years the employee has worked at the company |
-| **Work_accident** | Whether the employee experienced a workplace accident |
+| **work_accident** | Whether the employee experienced a workplace accident |
 | **promotion_last_5years** | Whether the employee received a promotion within the last five years |
 | **department** | Employee's department or business unit |
 | **salary** | Employee salary category (**Low**, **Medium**, or **High**) |
