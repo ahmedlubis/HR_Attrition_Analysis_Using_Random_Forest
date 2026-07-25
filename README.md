@@ -15,7 +15,7 @@ The 10 variables in the dataset include:
 - salary: Categorical variable representing pay level, ordered as "low", "medium", or "high".
 
 2. Interpretation of Results
-Model PerformanceThe Random Forest model was trained using an ensemble of 500 decision trees on a 70% stratified training split (10,102 samples).
+Model Performance of The Random Forest model was trained using an ensemble of 500 decision trees on a 70% stratified training split (10,102 samples).
 - Out-of-Bag (OOB) Error Rate: The internal training validation yielded a remarkably low 1% error rate.
 - Overall Accuracy: When evaluated against the unseen 30% testing set (4,328 samples) , the model achieved 98.75% accuracy , massively outperforming the No Information Rate of 79.21%.
 - Sensitivity & Specificity:
