@@ -248,4 +248,4 @@ print(importance(rf_model))
 varImpPlot(rf_model, main = "Feature Importance for Employee Attrition")
 ```
 
-![](HR-Attrition-Analysis-Using-Random-Forest_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![HR Attrition Analysis Using Random Forest](analysis_bar.png)<!-- -->
